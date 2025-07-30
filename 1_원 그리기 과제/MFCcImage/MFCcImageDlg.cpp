@@ -74,6 +74,7 @@ BEGIN_MESSAGE_MAP(CMFCcImageDlg, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_BN_CLICKED(IDC_BNT_RESET, &CMFCcImageDlg::OnBnClickedBntReset)
 	ON_EN_CHANGE(IDC_THICK_VAL, &CMFCcImageDlg::OnEnChangeThickVal)
+	ON_BN_CLICKED(IDC_BTN_RANDOM, &CMFCcImageDlg::OnBnClickedBtnRandom)
 END_MESSAGE_MAP()
 
 
@@ -314,7 +315,7 @@ void CMFCcImageDlg::OnMouseMove(UINT nFlags, CPoint point)
 			{
 				selectedDot.x = point.x;
 				selectedDot.y = point.y;
-				cout << selectedDot << endl;
+				
 				UpdateImageWithDots();
 				UpdateDotLabel(i);
 
@@ -406,6 +407,7 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	DrawCanvas();
 	cout << " clear all dots" << endl;
 }
+
 void CMFCcImageDlg::OnEnChangeThickVal()
 {
 	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
@@ -425,7 +427,6 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 	}
 
 	UpdateData(FALSE);
-
 }
 
 ostream& operator<<(ostream& os, const Dot& d) {
@@ -433,9 +434,76 @@ ostream& operator<<(ostream& os, const Dot& d) {
 	return os;
 }
 
+// 점의 정보를 업데이트
 void CMFCcImageDlg::UpdateDotLabel(int idx) {
 	const UINT ids[3] = { IDC_DOT1_VAL, IDC_DOT2_VAL, IDC_DOT3_VAL };
 	CString str;
 	str.AppendFormat(_T("X: %d Y: %d"), m_dots[idx].x, m_dots[idx].y);
 	GetDlgItem(ids[idx])->SetWindowText(str);
+}
+
+// 랜덤 이동 버튼 액션
+void CMFCcImageDlg::OnBnClickedBtnRandom()
+{
+	if (m_dots.size() < 3) {
+		AfxMessageBox(_T("점의 개수가 모자랍니다."));
+		return;
+	}
+
+	//for (int i = 0; i < 10; i++) {
+	//	RandomMoveDots();
+	//	Sleep(500);
+	//}
+	AfxBeginThread(RandomMoveThreadProc, this);
+	
+}
+
+// 1회 3개의 점을 랜덤으로 세팅하고, 정원을 다시 그림
+void CMFCcImageDlg::RandomMoveDots()
+{
+	if (m_dots.size() < 3) {
+		AfxMessageBox(_T("점의 개수가 모자랍니다."));
+		return;
+	}
+
+	for (int i = 0; i < m_dots.size(); i++) {
+		m_dots[i].SetRandom();
+		UpdateDotLabel(i);
+	}
+	UpdateImageWithDots();
+	drawCircle(m_dots, thickness);
+	UpdateDisplay();
+}
+
+
+// 10~500 사이의 값으로 점의 포지션을 업데이트함
+void Dot::SetRandom() {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(10, 500); 
+	x = dis(gen);
+	y = dis(gen);
+}
+
+// 비동기적으로 랜덤 무브 10회 구현
+UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
+{
+	CMFCcImageDlg* pThis = reinterpret_cast<CMFCcImageDlg*>(pParam);
+	if (!pThis) return 1;
+
+	for (int i = 0; i < 10; ++i) {
+		if (pThis->m_dots.size() < 3) break;
+
+		// 점 3개 랜덤 이동
+		for (size_t k = 0; k < pThis->m_dots.size(); ++k) {
+			pThis->m_dots[k].SetRandom();
+			pThis->UpdateDotLabel(k);  // 점 정보 표출 갱신 (UI 갱신은 PostMessage 혹은 SendMessage로 우회 권장)
+		}
+		pThis->UpdateImageWithDots();
+		pThis->drawCircle(pThis->m_dots, pThis->thickness); // 예: thickness = 1.5
+		pThis->UpdateDisplay();
+
+		Sleep(500);
+	}
+	return 0;
 }

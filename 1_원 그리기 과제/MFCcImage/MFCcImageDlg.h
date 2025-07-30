@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <iostream>
+#include <random>
 
 using namespace std;
 
@@ -17,6 +18,8 @@ public:
 	bool selected;  // 점이 드래그 중인지 여부
 
 	Dot(int _x, int _y) : x(_x), y(_y), selected(false) {}
+	
+	void SetRandom();
 
 	 friend ostream& operator<<(ostream& os, const Dot& d);
 };
@@ -66,4 +69,7 @@ public:
 	int thickness;
 	afx_msg void OnEnChangeThickVal();
 	void UpdateDotLabel(int idx);
+	afx_msg void OnBnClickedBtnRandom();
+	void RandomMoveDots();
+	static UINT RandomMoveThreadProc(LPVOID pParam);
 };
