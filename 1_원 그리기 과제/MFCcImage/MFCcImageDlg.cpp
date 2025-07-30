@@ -446,36 +446,40 @@ void CMFCcImageDlg::UpdateDotLabel(int idx) {
 // 랜덤 이동 버튼 액션
 void CMFCcImageDlg::OnBnClickedBtnRandom()
 {
-	if (m_dots.size() < 3) {
-		AfxMessageBox(_T("점의 개수가 모자랍니다."));
+	try {
+		CheckDotsForOperation(); // 에러 반환 가능성
+		AfxBeginThread(RandomMoveThreadProc, this);
+	}
+	catch (const exception& e) {
+		CString msg(e.what());
+		AfxMessageBox(msg);
 		return;
 	}
-
-	AfxBeginThread(RandomMoveThreadProc, this);
+	
 	
 }
 
 // 1회 3개의 점을 랜덤으로 세팅하고, 정원을 다시 그림
 void CMFCcImageDlg::RandomMoveDots()
 {
-	if (m_dots.size() < 3) {
-
-	}
 	try {
-		CheckDotsForOperation();
+		CheckDotsForOperation(); // 에러 반환 가능성
+
+		for (int i = 0; i < m_dots.size(); i++) {
+			m_dots[i].SetRandom();
+			UpdateDotLabel(i);
+		}
+		UpdateImageWithDots();
+		drawCircle(m_dots, thickness);
+		UpdateDisplay();
 	}
 	catch (const exception& e) {
-		AfxMessageBox(_T("점의 개수가 모자랍니다."));
+		CString msg(e.what());
+		AfxMessageBox(msg);
 		return;
 	}
 
-	for (int i = 0; i < m_dots.size(); i++) {
-		m_dots[i].SetRandom();
-		UpdateDotLabel(i);
-	}
-	UpdateImageWithDots();
-	drawCircle(m_dots, thickness);
-	UpdateDisplay();
+
 }
 
 
@@ -503,16 +507,20 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 			pThis->UpdateDotLabel(k); 
 		}
 		pThis->UpdateImageWithDots();
+
+		// 정원 그리기
 		pThis->drawCircle(pThis->m_dots, pThis->thickness);
+
+		// 화면 업데이트
 		pThis->UpdateDisplay();
 
-		Sleep(500);
+		Sleep(500);	// 0.5s
 	}
 	return 0;
 }
 
 void CMFCcImageDlg::CheckDotsForOperation() {
 	if (m_dots.size() < 3) {
-		throw std::runtime_error("점의 개수가 모자랍니다.");
+		throw runtime_error("점의 개수가 모자랍니다.");
 	}
 }
