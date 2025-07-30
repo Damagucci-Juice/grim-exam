@@ -9,13 +9,16 @@
 
 using namespace std;
 
-struct Dot
+class Dot
 {
+public: 
 	int x;
 	int y;
 	bool selected;  // 점이 드래그 중인지 여부
 
 	Dot(int _x, int _y) : x(_x), y(_y), selected(false) {}
+
+	 friend ostream& operator<<(ostream& os, const Dot& d);
 };
 
 // CMFCcImageDlg 대화 상자

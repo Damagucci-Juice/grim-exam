@@ -312,6 +312,7 @@ void CMFCcImageDlg::OnMouseMove(UINT nFlags, CPoint point)
 			{
 				dot.x = point.x;
 				dot.y = point.y;
+				cout << dot << endl;
 				UpdateImageWithDots();
 
 				/// 점 3개일 때 path 원 그리기
@@ -416,4 +417,9 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 
 	UpdateData(FALSE);
 
+}
+
+ostream& operator<<(ostream& os, const Dot& d) {
+	os << "X: " << d.x << ", Y: " << d.y;
+	return os;
 }
