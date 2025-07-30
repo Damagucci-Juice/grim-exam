@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CMFCcImageDlg, CDialogEx)
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_BN_CLICKED(IDC_BNT_RESET, &CMFCcImageDlg::OnBnClickedBntReset)
+	ON_EN_CHANGE(IDC_THICK_VAL, &CMFCcImageDlg::OnEnChangeThickVal)
 END_MESSAGE_MAP()
 
 
@@ -256,7 +257,7 @@ void CMFCcImageDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	if (m_dots.size() == 3) {
-		drawCircle(m_dots, 1.5);
+		drawCircle(m_dots, thickness);
 		UpdateDisplay();
 	}
 
@@ -315,7 +316,7 @@ void CMFCcImageDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 				/// 점 3개일 때 path 원 그리기
 				if (m_dots.size() == 3) {
-					drawCircle(m_dots, 1.5);
+					drawCircle(m_dots, thickness);
 					UpdateDisplay();
 				}
 					
@@ -391,4 +392,25 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	// 캔버스 초기화
 	DrawCanvas();
 	cout << " clear all dots" << endl;
+}
+void CMFCcImageDlg::OnEnChangeThickVal()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CDialogEx::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// ENM_CHANGE가 있으면 마스크에 ORed를 플래그합니다.
+
+	UpdateData(TRUE);
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (1 <= thickness && thickness <= 10) {
+		cout << "value changed" << endl;
+		drawCircle(m_dots, thickness);
+	}
+	else {
+		cout << "wrong edit value" << endl;
+		thickness = 1;
+	}
+
+	UpdateData(FALSE);
+
 }

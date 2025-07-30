@@ -61,4 +61,5 @@ public:
 	void drawCircle(const std::vector<Dot>& dots, double thickness);
 	afx_msg void OnBnClickedBntReset();
 	int thickness;
+	afx_msg void OnEnChangeThickVal();
 };

@@ -16,7 +16,6 @@
 #define IDC_DOT1_VAL                    1011
 #define IDC_DOT2_VAL                    1012
 #define IDC_DOT3_VAL                    1013
-#define IDC_EDIT3                       1015
 #define IDC_THICK_VAL                   1016
 
 // Next default values for new objects
