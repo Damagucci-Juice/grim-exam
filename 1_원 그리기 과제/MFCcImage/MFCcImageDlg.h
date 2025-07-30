@@ -59,4 +59,5 @@ public:
 	void OnLButtonUp(UINT nFlags, CPoint point);
 	bool GetCircumcenter(const Dot& p1, const Dot& p2, const Dot& p3, double& cx, double& cy);
 	void drawCircle(const std::vector<Dot>& dots, double thickness);
+	afx_msg void OnBnClickedBntReset();
 };
