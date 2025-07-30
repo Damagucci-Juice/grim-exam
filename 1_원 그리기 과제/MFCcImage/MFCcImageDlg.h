@@ -72,4 +72,5 @@ public:
 	afx_msg void OnBnClickedBtnRandom();
 	void RandomMoveDots();
 	static UINT RandomMoveThreadProc(LPVOID pParam);
+	void CheckDotsForOperation();
 };

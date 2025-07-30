@@ -7,6 +7,7 @@
 #include "MFCcImage.h"
 #include "MFCcImageDlg.h"
 #include "afxdialogex.h"
+#include <stdexcept> 
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -450,10 +451,6 @@ void CMFCcImageDlg::OnBnClickedBtnRandom()
 		return;
 	}
 
-	//for (int i = 0; i < 10; i++) {
-	//	RandomMoveDots();
-	//	Sleep(500);
-	//}
 	AfxBeginThread(RandomMoveThreadProc, this);
 	
 }
@@ -462,6 +459,12 @@ void CMFCcImageDlg::OnBnClickedBtnRandom()
 void CMFCcImageDlg::RandomMoveDots()
 {
 	if (m_dots.size() < 3) {
+
+	}
+	try {
+		CheckDotsForOperation();
+	}
+	catch (const exception& e) {
 		AfxMessageBox(_T("점의 개수가 모자랍니다."));
 		return;
 	}
@@ -497,13 +500,19 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 		// 점 3개 랜덤 이동
 		for (size_t k = 0; k < pThis->m_dots.size(); ++k) {
 			pThis->m_dots[k].SetRandom();
-			pThis->UpdateDotLabel(k);  // 점 정보 표출 갱신 (UI 갱신은 PostMessage 혹은 SendMessage로 우회 권장)
+			pThis->UpdateDotLabel(k); 
 		}
 		pThis->UpdateImageWithDots();
-		pThis->drawCircle(pThis->m_dots, pThis->thickness); // 예: thickness = 1.5
+		pThis->drawCircle(pThis->m_dots, pThis->thickness);
 		pThis->UpdateDisplay();
 
 		Sleep(500);
 	}
 	return 0;
+}
+
+void CMFCcImageDlg::CheckDotsForOperation() {
+	if (m_dots.size() < 3) {
+		throw std::runtime_error("점의 개수가 모자랍니다.");
+	}
 }
