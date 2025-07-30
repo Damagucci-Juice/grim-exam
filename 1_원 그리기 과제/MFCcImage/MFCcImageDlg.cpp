@@ -394,6 +394,4 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	// 캔버스 초기화
 	DrawCanvas();
 	cout << " clear all dots" << endl;
-
-	
 }
