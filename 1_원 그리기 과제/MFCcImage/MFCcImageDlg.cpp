@@ -485,9 +485,9 @@ void CMFCcImageDlg::RandomMoveDots()
 
 // 10~500 사이의 값으로 점의 포지션을 업데이트함
 void Dot::SetRandom() {
-	static std::random_device rd;
-	static std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(10, 500); 
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<> dis(10, 500); 
 	x = dis(gen);
 	y = dis(gen);
 }
