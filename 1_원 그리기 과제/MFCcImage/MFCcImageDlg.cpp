@@ -307,14 +307,16 @@ void CMFCcImageDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	if (nFlags & MK_LBUTTON) 
 	{
-		for (auto& dot : m_dots)
+		for (int i = 0; i < m_dots.size(); i++)
 		{
-			if (dot.selected)
+			Dot& selectedDot = m_dots[i];
+			if (selectedDot.selected)
 			{
-				dot.x = point.x;
-				dot.y = point.y;
-				cout << dot << endl;
+				selectedDot.x = point.x;
+				selectedDot.y = point.y;
+				cout << selectedDot << endl;
 				UpdateImageWithDots();
+				UpdateDotLabel(i);
 
 				/// 점 3개일 때 path 원 그리기
 				if (m_dots.size() == 3) {
@@ -388,6 +390,12 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	// 점 초기화 
 	// TODO: 점 영역 초기화
 	m_dots.clear();
+	const UINT ids[3] = { IDC_DOT1_VAL, IDC_DOT2_VAL, IDC_DOT3_VAL };
+	for (auto& id : ids) {
+		CString str;
+		str.AppendFormat(_T("X: - Y: -"));
+		GetDlgItem(id)->SetWindowText(str);
+	}
 
 	// 선 굵기 초기화
 	UpdateData(true);
@@ -428,6 +436,6 @@ ostream& operator<<(ostream& os, const Dot& d) {
 void CMFCcImageDlg::UpdateDotLabel(int idx) {
 	const UINT ids[3] = { IDC_DOT1_VAL, IDC_DOT2_VAL, IDC_DOT3_VAL };
 	CString str;
-	str.AppendFormat(_T("X: %d, Y: %d)  "), m_dots[idx].x, m_dots[idx].y);
+	str.AppendFormat(_T("X: %d Y: %d"), m_dots[idx].x, m_dots[idx].y);
 	GetDlgItem(ids[idx])->SetWindowText(str);
 }
