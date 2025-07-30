@@ -387,8 +387,11 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	// TODO: 점 영역 초기화
 	m_dots.clear();
 
-	// TODO: 선 굵기 초기화
-	
+	// 선 굵기 초기화
+	UpdateData(true);
+	thickness = 1;
+	UpdateData(false);
+
 	// 캔버스 초기화
 	DrawCanvas();
 	cout << " clear all dots" << endl;
