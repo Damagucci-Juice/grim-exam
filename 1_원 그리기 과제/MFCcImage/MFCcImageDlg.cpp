@@ -254,6 +254,7 @@ void CMFCcImageDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		m_dots.emplace_back(point.x, point.y);
 		UpdateImageWithDots();
+		UpdateDotLabel(m_dots.size() - 1);
 	}
 
 	if (m_dots.size() == 3) {
@@ -422,4 +423,11 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 ostream& operator<<(ostream& os, const Dot& d) {
 	os << "X: " << d.x << ", Y: " << d.y;
 	return os;
+}
+
+void CMFCcImageDlg::UpdateDotLabel(int idx) {
+	const UINT ids[3] = { IDC_DOT1_VAL, IDC_DOT2_VAL, IDC_DOT3_VAL };
+	CString str;
+	str.AppendFormat(_T("X: %d, Y: %d)  "), m_dots[idx].x, m_dots[idx].y);
+	GetDlgItem(ids[idx])->SetWindowText(str);
 }

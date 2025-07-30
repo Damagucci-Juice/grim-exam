@@ -65,4 +65,5 @@ public:
 	afx_msg void OnBnClickedBntReset();
 	int thickness;
 	afx_msg void OnEnChangeThickVal();
+	void UpdateDotLabel(int idx);
 };
