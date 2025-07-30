@@ -519,6 +519,7 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 	return 0;
 }
 
+// 점 3개 미만으로 들고 있는지 검토해서 에러 반환
 void CMFCcImageDlg::CheckDotsForOperation() {
 	if (m_dots.size() < 3) {
 		throw runtime_error("점의 개수가 모자랍니다.");
