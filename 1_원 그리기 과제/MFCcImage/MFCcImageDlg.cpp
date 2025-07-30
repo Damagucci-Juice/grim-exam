@@ -53,6 +53,7 @@ END_MESSAGE_MAP()
 
 CMFCcImageDlg::CMFCcImageDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCCIMAGE_DIALOG, pParent)
+	, thickness(1)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -60,18 +61,14 @@ CMFCcImageDlg::CMFCcImageDlg(CWnd* pParent /*=nullptr*/)
 void CMFCcImageDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_THICK_VAL, thickness);
+	DDV_MinMaxInt(pDX, thickness, 1, 10);
 }
 
 BEGIN_MESSAGE_MAP(CMFCcImageDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	/*
-	* 
-	ON_BN_CLICKED(IDC_BTN_SAVE, &CMFCcImageDlg::OnBnClickedBtnSave)
-	ON_BN_CLICKED(IDC_BTN_LOAD, &CMFCcImageDlg::OnBnClickedBtnLoad)
-	ON_BN_CLICKED(IDC_BTN_ACTION, &CMFCcImageDlg::OnBnClickedBtnAction)
-	*/
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
