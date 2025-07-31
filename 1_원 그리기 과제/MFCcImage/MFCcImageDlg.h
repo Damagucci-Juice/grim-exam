@@ -63,10 +63,10 @@ public:
     void UpdateDotLabel(int idx);
 
     // === 도트 및 그리기 ===
-    void drawDot(unsigned char* fm, int i, int j, int nRadius, int nGray);
-    bool isInCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
+    void DrawDot(unsigned char* fm, int i, int j, int nRadius, int nGray);
+    bool IsInCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
     bool GetCircumcenter(const Dot& p1, const Dot& p2, const Dot& p3, double& cx, double& cy);
-    void drawCircle(const std::vector<Dot>& dots, double thickness);
+    void DrawCircle(const std::vector<Dot>& dots, double thickness);
 
     // === 점 조작/동작 ===
     void RandomMoveDots();

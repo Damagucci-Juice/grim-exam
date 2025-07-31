@@ -205,7 +205,7 @@ bool CMFCcImageDlg::validImagePos(int x, int y) {
 	return rect.PtInRect(CPoint(x, y));
 }
 
-void CMFCcImageDlg::drawDot(unsigned char* fm, int x, int y, int nRadius, int nGray) {
+void CMFCcImageDlg::DrawDot(unsigned char* fm, int x, int y, int nRadius, int nGray) {
 	int nCenterX = x + nRadius;
 	int nCenterY = y + nRadius;
 	int nPitch = m_image.GetPitch();
@@ -213,14 +213,14 @@ void CMFCcImageDlg::drawDot(unsigned char* fm, int x, int y, int nRadius, int nG
 	for (int j = y; j < y + nRadius * 2; j++) {
 		for (int i = x; i < x + nRadius * 2; i++) {
 		
-			if (isInCircle(i, j, nCenterX, nCenterY, nRadius) && validImagePos(i,j)) {
+			if (IsInCircle(i, j, nCenterX, nCenterY, nRadius) && validImagePos(i,j)) {
 				fm[j * nPitch + i] = nGray;
 			}
 		}
 	}
 }
 
-bool CMFCcImageDlg::isInCircle(int i, int j, int nCenterX, int nCenterY, int nRadius) {
+bool CMFCcImageDlg::IsInCircle(int i, int j, int nCenterX, int nCenterY, int nRadius) {
 	bool bRet = false;
 
 	double dX = i - nCenterX;
@@ -260,7 +260,7 @@ void CMFCcImageDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	if (m_dots.size() == 3) {
-		drawCircle(m_dots, thickness);
+		DrawCircle(m_dots, thickness);
 		UpdateDisplay();
 	}
 
@@ -299,7 +299,7 @@ void CMFCcImageDlg::UpdateImageWithDots()
 	{
 		int x = dot.x - radius;
 		int y = dot.y - radius;
-		drawDot(fm, x, y, radius, 0);
+		DrawDot(fm, x, y, radius, 0);
 	}
 
 	UpdateDisplay();
@@ -322,7 +322,7 @@ void CMFCcImageDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 				/// 점 3개일 때 path 원 그리기
 				if (m_dots.size() == 3) {
-					drawCircle(m_dots, thickness);
+					DrawCircle(m_dots, thickness);
 					UpdateDisplay();
 				}
 					
@@ -361,7 +361,7 @@ bool CMFCcImageDlg::GetCircumcenter(const Dot& p1, const Dot& p2, const Dot& p3,
 }
 
 // 원 그리기
-void CMFCcImageDlg::drawCircle(const std::vector<Dot>& dots, double thickness)
+void CMFCcImageDlg::DrawCircle(const std::vector<Dot>& dots, double thickness)
 {
 	if (dots.size() != 3) return;
 
@@ -420,7 +420,7 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (1 <= thickness && thickness <= 10) {
 		cout << "value changed" << endl;
-		drawCircle(m_dots, thickness);
+		DrawCircle(m_dots, thickness);
 	}
 	else {
 		cout << "wrong edit value" << endl;
@@ -470,7 +470,7 @@ void CMFCcImageDlg::RandomMoveDots()
 			UpdateDotLabel(i);
 		}
 		UpdateImageWithDots();
-		drawCircle(m_dots, thickness);
+		DrawCircle(m_dots, thickness);
 		UpdateDisplay();
 	}
 	catch (const exception& e) {
@@ -509,7 +509,7 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 		pThis->UpdateImageWithDots();
 
 		// 정원 그리기
-		pThis->drawCircle(pThis->m_dots, pThis->thickness);
+		pThis->DrawCircle(pThis->m_dots, pThis->thickness);
 
 		// 화면 업데이트
 		pThis->UpdateDisplay();
