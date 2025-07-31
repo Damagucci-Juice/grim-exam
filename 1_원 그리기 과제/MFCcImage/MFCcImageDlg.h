@@ -64,7 +64,7 @@ public:
 
     // === 도트 및 그리기 ===
     void DrawDot(unsigned char* fm, int i, int j, int nRadius, int nGray);
-    bool IsInCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
+    bool IsInDot(int i, int j, int nCenterX, int nCenterY, int nRadius);
     bool GetCircumcenter(const Dot& p1, const Dot& p2, const Dot& p3, double& cx, double& cy);
     void DrawCircle(const std::vector<Dot>& dots, double thickness);
 

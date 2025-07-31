@@ -213,14 +213,14 @@ void CMFCcImageDlg::DrawDot(unsigned char* fm, int x, int y, int nRadius, int nG
 	for (int j = y; j < y + nRadius * 2; j++) {
 		for (int i = x; i < x + nRadius * 2; i++) {
 		
-			if (IsInCircle(i, j, nCenterX, nCenterY, nRadius) && validImagePos(i,j)) {
+			if (IsInDot(i, j, nCenterX, nCenterY, nRadius) && validImagePos(i,j)) {
 				fm[j * nPitch + i] = nGray;
 			}
 		}
 	}
 }
 
-bool CMFCcImageDlg::IsInCircle(int i, int j, int nCenterX, int nCenterY, int nRadius) {
+bool CMFCcImageDlg::IsInDot(int i, int j, int nCenterX, int nCenterY, int nRadius) {
 	bool bRet = false;
 
 	double dX = i - nCenterX;
