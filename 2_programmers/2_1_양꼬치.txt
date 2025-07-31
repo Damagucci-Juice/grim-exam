@@ -1,0 +1,13 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n, int k) {
+    int answer = n * 12000;
+    int actualCnt = k - (n / 10);
+    if(actualCnt > 0) {
+        answer += actualCnt * 2000;
+    }
+    return answer;
+}

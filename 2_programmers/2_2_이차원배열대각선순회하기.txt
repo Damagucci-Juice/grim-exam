@@ -1,0 +1,20 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+int solution(vector<vector<int>> board, int k) {
+    int answer = 0;
+    int row = board.size();
+    int col = board[0].size();
+
+    for(int ri = 0; ri < row; ri++) {
+        for(int ci = 0; ci < col; ci++) {
+            if (ci + ri <= k) {
+                answer += board[ri][ci];
+            }
+        }
+    }
+    return answer;
+}
