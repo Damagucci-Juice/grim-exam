@@ -567,3 +567,10 @@ void CMFCcImageDlg::CheckDotsForOperation() {
 		throw runtime_error("점의 개수가 모자랍니다.");
 	}
 }
+
+// 굵기 속성 변경 후 엔터시 프로그램 종료를 방지
+void CMFCcImageDlg::OnOK()
+{
+	// 엔터로 다이얼로그 종료 또는 앱 죽음을 방지 
+	// CDialogEx::OnOK(); 호출 안 함!
+}

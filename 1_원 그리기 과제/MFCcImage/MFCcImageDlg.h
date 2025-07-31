@@ -80,4 +80,5 @@ public:
     afx_msg void OnBnClickedBntReset();
     afx_msg void OnBnClickedBtnRandom();
     afx_msg void OnEnChangeThickVal();
+    afx_msg void OnOK();
 };
