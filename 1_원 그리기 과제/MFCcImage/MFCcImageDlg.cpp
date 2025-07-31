@@ -447,11 +447,15 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 	UpdateData(TRUE);
 	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (1 <= thickness && thickness <= 10) {
-		cout << "value changed" << endl;
-		DrawCircle(m_dots, thickness);
-	}
-	else {
-		cout << "wrong edit value" << endl;
+		
+		try {
+			DrawCircle(m_dots, thickness);
+		}
+		catch (exception& e) {
+			cout << e.what() << endl;
+		}
+		
+	} else {
 		thickness = 1;
 	}
 
