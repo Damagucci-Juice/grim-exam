@@ -29,7 +29,8 @@ private:
     // === 프라이빗 멤버 변수 ===
     CImage m_image;
     HICON m_hIcon;
-    int thickness;
+    double thickness;
+    CString raw_thickness;
 
     // 유틸/헬퍼 함수 (private)
     bool validImagePos(int x, int y);

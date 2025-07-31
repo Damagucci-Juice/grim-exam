@@ -470,6 +470,7 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
 	if (CStringToNonNegativeDouble(raw_thickness, thickness)) {
+		// thickness이 0 이상인 유효한 double값
 		try {
 			UpdateImageWithDots();
 			DrawCircle(m_dots, thickness);
@@ -480,6 +481,7 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 		}
 
 	} else {
+		//AfxMessageBox(_T("0 이상인 실수를 입력하세요."));
 		return;
 	}
 
