@@ -477,7 +477,7 @@ void CMFCcImageDlg::OnBnClickedBtnRandom()
 {
 	try {
 		CheckDotsForOperation(); // 에러 반환 가능성
-		AfxBeginThread(RandomMoveThreadProc, this);
+		AfxBeginThread(RandomMoveThreadProc, this);	// RandomMoveThreadProc 이 완료되면 다시 버튼 활성화됨
 	}
 	catch (const exception& e) {
 		CString msg(e.what());
@@ -526,25 +526,38 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 {
 	CMFCcImageDlg* pThis = reinterpret_cast<CMFCcImageDlg*>(pParam);
 	if (!pThis) return 1;
+	// 랜덤 이동 버튼 비활성화
+	pThis->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(FALSE);
 
-	for (int i = 0; i < 10; ++i) {
+	int i = 0;
+	while (i < 10) {
 		if (pThis->m_dots.size() < 3) break;
 
 		// 점 3개 랜덤 이동
 		for (size_t k = 0; k < pThis->m_dots.size(); ++k) {
 			pThis->m_dots[k].SetRandom();
-			pThis->UpdateDotLabel(k); 
+			pThis->UpdateDotLabel(k);
 		}
 		pThis->UpdateImageWithDots();
 
 		// 정원 그리기
-		pThis->DrawCircle(pThis->m_dots, pThis->thickness);
+		try {
+			pThis->DrawCircle(pThis->m_dots, pThis->thickness);
 
-		// 화면 업데이트
-		pThis->UpdateDisplay();
+			// 화면 업데이트
+			pThis->UpdateDisplay();
 
-		Sleep(500);	// 0.5s
+			Sleep(500);	// 0.5s
+			i++;
+		}
+		catch (exception& e) {
+			cout << e.what() << endl;
+			continue;
+		}
 	}
+
+	// 랜덤 이동 버튼 활성화
+	pThis->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(TRUE);
 	return 0;
 }
 
