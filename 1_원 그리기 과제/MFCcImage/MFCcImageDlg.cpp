@@ -260,8 +260,15 @@ void CMFCcImageDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	if (m_dots.size() == 3) {
-		DrawCircle(m_dots, thickness);
-		UpdateDisplay();
+		try {
+			DrawCircle(m_dots, thickness);
+			UpdateDisplay();
+		}
+		catch (exception& e) {
+			// 너무 큰원이 만들어질 경우 에러 반환
+			cout << e.what() << endl;
+			return;
+		}
 	}
 
 	CDialogEx::OnLButtonDown(nFlags, point);
@@ -322,10 +329,16 @@ void CMFCcImageDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 				/// 점 3개일 때 path 원 그리기
 				if (m_dots.size() == 3) {
-					DrawCircle(m_dots, thickness);
-					UpdateDisplay();
+					try {
+						DrawCircle(m_dots, thickness);
+						UpdateDisplay();
+					}
+					catch (exception& e) {
+						// 너무 큰원이 만들어질 경우 에러 반환
+						cout << e.what() << endl;
+						break;
+					}
 				}
-					
 				break;  
 			}
 		}
@@ -342,21 +355,34 @@ void CMFCcImageDlg::OnLButtonUp(UINT nFlags, CPoint point)
 	CDialogEx::OnLButtonUp(nFlags, point);
 }
 
-// 원을 이룰 수 있는지 판단
+// 원을 이룰 수 있는지 판단, 
+// true: 원 그리기 가능
+// false: 원 그리기 불가
 bool CMFCcImageDlg::GetCircumcenter(const Dot& p1, const Dot& p2, const Dot& p3, double& cx, double& cy)
 {
+	const double EPS = 5;         
+	const double MAX_RADIUS = 1000; // 도화지 크기 대비 적당히 설정
+	// 분모가 너무 작아져서 무한대에 가까워 지는 경우 필터링
 	double d = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
-	if (d == 0) return false; // 일직선상
-	cx = (
+	if (fabs(d) < EPS) return false;
+
+	double dx = (
 		(p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y)
 		+ (p2.x * p2.x + p2.y * p2.y) * (p3.y - p1.y)
 		+ (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)
 		) / d;
-	cy = (
+
+	double dy = (
 		(p1.x * p1.x + p1.y * p1.y) * (p3.x - p2.x)
 		+ (p2.x * p2.x + p2.y * p2.y) * (p1.x - p3.x)
 		+ (p3.x * p3.x + p3.y * p3.y) * (p2.x - p1.x)
 		) / d;
+
+	// 반지름이 너무 큰 경우 필터링
+	double r = sqrt((p1.x - dx) * (p1.x - dx) + (p1.y - dy) * (p1.y - dy));
+	if (r > MAX_RADIUS) return false;  
+	cx = dx;
+	cy = dy;
 	return true;
 }
 
@@ -368,7 +394,9 @@ void CMFCcImageDlg::DrawCircle(const std::vector<Dot>& dots, double thickness)
 	unsigned char* fm = (unsigned char*)m_image.GetBits();
 
 	double cx, cy;
-	if (!GetCircumcenter(dots[0], dots[1], dots[2], cx, cy)) return;
+	if (!GetCircumcenter(dots[0], dots[1], dots[2], cx, cy)) {
+		throw std::runtime_error("3개의 점이 거의 일직선상에 있어 정원을 만들 수 없습니다.");
+	}
 
 	double r = sqrt((dots[0].x - cx) * (dots[0].x - cx) + (dots[0].y - cy) * (dots[0].y - cy));
 
@@ -386,6 +414,7 @@ void CMFCcImageDlg::DrawCircle(const std::vector<Dot>& dots, double thickness)
 		}
 	}
 }
+
 void CMFCcImageDlg::OnBnClickedBntReset()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
