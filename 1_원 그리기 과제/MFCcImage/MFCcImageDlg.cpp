@@ -429,6 +429,7 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	// 선 굵기 초기화
 	UpdateData(true);
 	thickness = 1;
+	raw_thickness = "1";
 	UpdateData(false);
 
 	// 캔버스 초기화
