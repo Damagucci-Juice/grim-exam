@@ -433,7 +433,6 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 
 	// 캔버스 초기화
 	DrawCanvas();
-	cout << " clear all dots" << endl;
 }
 
 #include <afx.h>   // CString
@@ -441,21 +440,16 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 bool CStringToNonNegativeDouble(const CString& str, double& outValue)
 {
 	// 문자열을 double로 변환 시도
+	// 
 	// _stscanf_s 함수는 안전하게 포맷 변환 가능
 	if (_stscanf_s(str, _T("%lf"), &outValue) == 1) {
 		// 변환 성공 후 0 이상인지 체크
 		if (outValue >= 0.0) {
-			cout << "SUccess" << endl;
-			cout << "str: " << str << endl;
-			cout << "before: " << outValue << endl;
 			return true;
 		}
-			
 	}
+
 	// 변환 실패 또는 음수면 false 반환
-	cout << "FAIL" << endl;
-	cout << "str: " << str << endl;
-	cout << "before: " << outValue << endl;
 	return false;
 }
 
@@ -626,7 +620,6 @@ void CMFCcImageDlg::OnOK()
 		}
 	}
 	else {
-		//AfxMessageBox(_T("0 이상인 실수를 입력하세요."));
 		return;
 	}
 }
