@@ -419,7 +419,6 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	// 점 초기화 
-	// TODO: 점 영역 초기화
 	m_dots.clear();
 	const UINT ids[3] = { IDC_DOT1_VAL, IDC_DOT2_VAL, IDC_DOT3_VAL };
 	for (auto& id : ids) {
@@ -551,6 +550,7 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 			i++;
 		}
 		catch (exception& e) {
+			// 만약 에러가 발생하면 그것은 카운트에 차지하지 않고, 총 10번을 채우도록 설정
 			cout << e.what() << endl;
 			continue;
 		}
