@@ -611,7 +611,7 @@ void CMFCcImageDlg::OnOK()
 {
 	// 엔터로 다이얼로그 종료 또는 앱 죽음을 방지 
 	// CDialogEx::OnOK(); 호출 안 함!
-					/// 점 3개일 때 path 원 그리기
+	/// 점 3개일 때 path 원 그리기
 	if (m_dots.size() != 3) { return; }
 
 	if (CStringToNonNegativeDouble(raw_thickness, thickness)) {
