@@ -132,6 +132,14 @@ void CMFCcImageDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CMFCcImageDlg::OnPaint()
 {
+
+	// m_image 화면에 그림
+	CPaintDC dc(this);
+
+	if (m_image) {
+		m_image.Draw(dc, 0, 0);
+	}	
+
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // 그리기를 위한 디바이스 컨텍스트입니다.
@@ -153,6 +161,8 @@ void CMFCcImageDlg::OnPaint()
 	{
 		CDialogEx::OnPaint();
 	}
+
+	
 }
 
 // 사용자가 최소화된 창을 끄는 동안에 커서가 표시되도록 시스템에서
