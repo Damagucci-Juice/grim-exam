@@ -3,23 +3,17 @@
 #include <vector>
 #include <iostream>
 #include <random>
-
+#include "Dot.h"
 using namespace std;
 
-//--------------------------------
-// Dot 클래스: 구조체/유틸
-class Dot
-{
-public:
-    int x;
-    int y;
-    bool selected;  // 점이 드래그 중인지 여부
+#include "Process.h"
+#include <chrono>
+#include <thread>
+using namespace chrono;
 
-    Dot(int _x, int _y) : x(_x), y(_y), selected(false) {}
-    void SetRandom();
-
-    friend ostream& operator<<(ostream& os, const Dot& d);
-};
+// MARK: - 전역 Util 함수
+// void threadProcess(CWnd* pParent)
+// bool CStringToNonNegativeDouble(const CString& str, double& outValue)
 
 //--------------------------------
 // CMFCcImageDlg 대화 상자
@@ -29,7 +23,6 @@ private:
     // === 프라이빗 멤버 변수 ===
     CImage m_image;
     HICON m_hIcon;
-    double thickness;
     CString raw_thickness;
 
     // 유틸/헬퍼 함수 (private)
@@ -42,6 +35,7 @@ public:
     // === 생성 및 상태 ===
     CMFCcImageDlg(CWnd* pParent = nullptr);
     std::vector<Dot> m_dots;
+    double thickness;
 
 #ifdef AFX_DESIGN_TIME
     enum { IDD = IDD_MFCCIMAGE_DIALOG };
@@ -68,10 +62,6 @@ public:
     bool IsInDot(int i, int j, int nCenterX, int nCenterY, int nRadius);
     bool GetCircumcenter(const Dot& p1, const Dot& p2, const Dot& p3, double& cx, double& cy);
     void DrawCircle(const std::vector<Dot>& dots, double thickness);
-
-    // === 점 조작/동작 ===
-    void RandomMoveDots();
-    static UINT RandomMoveThreadProc(LPVOID pParam);
 
     // === 이벤트 핸들러 ===
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
