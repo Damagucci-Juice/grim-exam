@@ -237,12 +237,10 @@ void CMFCcImageDlg::DrawCanvas()
 	if (m_image != NULL) {
 		m_image.Destroy();
 	}
-	int nWidth = 640;
-	int nHeight = 480;
 	int nBpp = 8;
 	
 	// 이미지 생성
-	m_image.Create(nWidth, -nHeight, nBpp);
+	m_image.Create(IMAGE_WIDTH, -IMAGE_HEIGHT, nBpp);
 
 	// 이미지 배경색
 	if (nBpp == 8) {
@@ -254,7 +252,7 @@ void CMFCcImageDlg::DrawCanvas()
 
 	// 메모리에 해당 값 색칠
 	unsigned char* fm = (unsigned char*)m_image.GetBits();
-	memset(fm, 0xff, nWidth * nHeight);
+	memset(fm, 0xff, IMAGE_WIDTH * IMAGE_HEIGHT);
 	UpdateDisplay();
 }
 
@@ -347,10 +345,8 @@ void CMFCcImageDlg::UpdateImageWithDots()
 	if (m_image)
 		m_image.Destroy();
 
-	int nWidth = 640;
-	int nHeight = 480;
 	int nBpp = 8;
-	m_image.Create(nWidth, -nHeight, nBpp);
+	m_image.Create(IMAGE_WIDTH, -IMAGE_HEIGHT, nBpp);
 
 	// 팔레트 세팅 (기본 흰색 배경과 검정색 0번 색상 확실히 설정)
 	static RGBQUAD rgb[256];
@@ -365,7 +361,7 @@ void CMFCcImageDlg::UpdateImageWithDots()
 	unsigned char* fm = (unsigned char*)m_image.GetBits();
 
 	// 배경 흰색 초기화
-	memset(fm, 255, nWidth * nHeight);
+	memset(fm, 255, IMAGE_WIDTH * IMAGE_HEIGHT);
 
 	// 저장된 점들 그리기
 	const int radius = 10;
