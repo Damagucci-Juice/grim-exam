@@ -514,80 +514,31 @@ void CMFCcImageDlg::UpdateDotLabel(int idx) {
 	GetDlgItem(ids[idx])->SetWindowText(str);
 }
 
-// 랜덤 이동 버튼 액션
-void CMFCcImageDlg::OnBnClickedBtnRandom()
+
+void threadProcess(CWnd* pParent)
 {
-	try {
-		CheckDotsForOperation(); // 에러 반환 가능성
-		AfxBeginThread(RandomMoveThreadProc, this);	// RandomMoveThreadProc 이 완료되면 다시 버튼 활성화됨
-	}
-	catch (const exception& e) {
-		CString msg(e.what());
-		AfxMessageBox(msg);
-		return;
-	}
-	
-	
-}
-
-// 1회 3개의 점을 랜덤으로 세팅하고, 정원을 다시 그림
-void CMFCcImageDlg::RandomMoveDots()
-{
-	try {
-		CheckDotsForOperation(); // 에러 반환 가능성
-
-		for (int i = 0; i < m_dots.size(); i++) {
-			m_dots[i].SetRandom();
-			UpdateDotLabel(i);
-		}
-		UpdateImageWithDots();
-		DrawCircle(m_dots, thickness);
-		UpdateDisplay();
-	}
-	catch (const exception& e) {
-		CString msg(e.what());
-		AfxMessageBox(msg);
-		return;
-	}
-
-
-}
-
-
-// 10~500 사이의 값으로 점의 포지션을 업데이트함
-void Dot::SetRandom() {
-	static random_device rd;
-	static mt19937 gen(rd());
-	uniform_int_distribution<> dis(10, 500); 
-	x = dis(gen);
-	y = dis(gen);
-}
-
-// 비동기적으로 랜덤 무브 10회 구현
-UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
-{
-	CMFCcImageDlg* pThis = reinterpret_cast<CMFCcImageDlg*>(pParam);
-	if (!pThis) return 1;
+	CMFCcImageDlg* pWnd = reinterpret_cast<CMFCcImageDlg*>(pParent);
+	if (!pWnd) return;
 	// 랜덤 이동 버튼 비활성화
-	pThis->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(FALSE);
+	pWnd->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(FALSE);
 
 	int i = 0;
 	while (i < 10) {
-		if (pThis->m_dots.size() < 3) break;
+		if (pWnd->m_dots.size() < 3) break;
 
 		// 점 3개 랜덤 이동
-		for (size_t k = 0; k < pThis->m_dots.size(); ++k) {
-			pThis->m_dots[k].SetRandom();
-			pThis->UpdateDotLabel(k);
+		for (size_t k = 0; k < pWnd->m_dots.size(); ++k) {
+			pWnd->m_dots[k].SetRandom();
+			pWnd->UpdateDotLabel(k);
 		}
-		pThis->UpdateImageWithDots();
+		pWnd->UpdateImageWithDots();
 
 		// 정원 그리기
 		try {
-			pThis->DrawCircle(pThis->m_dots, pThis->thickness);
+			pWnd->DrawCircle(pWnd->m_dots, pWnd->thickness);
 
 			// 화면 업데이트
-			pThis->UpdateDisplay();
+			pWnd->UpdateDisplay();
 
 			Sleep(500);	// 0.5s
 			i++;
@@ -600,8 +551,26 @@ UINT CMFCcImageDlg::RandomMoveThreadProc(LPVOID pParam)
 	}
 
 	// 랜덤 이동 버튼 활성화
-	pThis->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(TRUE);
-	return 0;
+	pWnd->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(TRUE);
+}
+
+// 랜덤 이동 버튼 액션
+void CMFCcImageDlg::OnBnClickedBtnRandom()
+{
+	try {
+		CheckDotsForOperation(); // 에러 반환 가능성
+		thread _thread(threadProcess, this);
+		_thread.detach();
+	}
+	catch (const exception& e) {
+		CString msg(e.what());
+		AfxMessageBox(msg);
+		return;
+	}
+	
+	
+}
+
 }
 
 // 점 3개 미만으로 들고 있는지 검토해서 에러 반환
