@@ -11,6 +11,10 @@ using namespace std;
 #include <thread>
 using namespace chrono;
 
+// MARK: - 전역 Util 함수
+// void threadProcess(CWnd* pParent)
+// bool CStringToNonNegativeDouble(const CString& str, double& outValue)
+
 //--------------------------------
 // CMFCcImageDlg 대화 상자
 class CMFCcImageDlg : public CDialogEx

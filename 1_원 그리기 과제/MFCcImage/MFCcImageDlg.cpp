@@ -8,6 +8,8 @@
 #include "MFCcImageDlg.h"
 #include "afxdialogex.h"
 #include <stdexcept> 
+#include <afx.h>
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -47,6 +49,62 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
+bool CStringToNonNegativeDouble(const CString& str, double& outValue)
+{
+	// 문자열을 double로 변환 시도
+	// 
+	// _stscanf_s 함수는 안전하게 포맷 변환 가능
+	if (_stscanf_s(str, _T("%lf"), &outValue) == 1) {
+		// 변환 성공 후 0 이상인지 체크
+		if (outValue >= 0.0) {
+			return true;
+		}
+	}
+
+	// 변환 실패 또는 음수면 false 반환
+	return false;
+}
+
+
+// Random Move를 10회 실행하는 스레드 함수
+void threadProcess(CWnd* pParent)
+{
+	CMFCcImageDlg* pWnd = reinterpret_cast<CMFCcImageDlg*>(pParent);
+	if (!pWnd) return;
+	// 랜덤 이동 버튼 비활성화
+	pWnd->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(FALSE);
+
+	int i = 0;
+	while (i < 10) {
+		if (pWnd->m_dots.size() < 3) break;
+
+		// 점 3개 랜덤 이동
+		for (size_t k = 0; k < pWnd->m_dots.size(); ++k) {
+			pWnd->m_dots[k].SetRandom();
+			pWnd->UpdateDotLabel(k);
+		}
+		pWnd->UpdateImageWithDots();
+
+		// 정원 그리기
+		try {
+			pWnd->DrawCircle(pWnd->m_dots, pWnd->thickness);
+
+			// 화면 업데이트
+			pWnd->UpdateDisplay();
+
+			Sleep(500);	// 0.5s
+			i++;
+		}
+		catch (exception& e) {
+			// 만약 에러가 발생하면 그것은 카운트에 차지하지 않고, 총 10번을 채우도록 설정
+			cout << e.what() << endl;
+			continue;
+		}
+	}
+
+	// 랜덤 이동 버튼 활성화
+	pWnd->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(TRUE);
+}
 
 // CMFCcImageDlg 대화 상자
 
@@ -446,23 +504,6 @@ void CMFCcImageDlg::OnBnClickedBntReset()
 	DrawCanvas();
 }
 
-#include <afx.h>   // CString
-
-bool CStringToNonNegativeDouble(const CString& str, double& outValue)
-{
-	// 문자열을 double로 변환 시도
-	// 
-	// _stscanf_s 함수는 안전하게 포맷 변환 가능
-	if (_stscanf_s(str, _T("%lf"), &outValue) == 1) {
-		// 변환 성공 후 0 이상인지 체크
-		if (outValue >= 0.0) {
-			return true;
-		}
-	}
-
-	// 변환 실패 또는 음수면 false 반환
-	return false;
-}
 
 void CMFCcImageDlg::OnEnChangeThickVal()
 {
@@ -497,46 +538,6 @@ void CMFCcImageDlg::UpdateDotLabel(int idx) {
 	CString str;
 	str.AppendFormat(_T("X: %d Y: %d"), m_dots[idx].x, m_dots[idx].y);
 	GetDlgItem(ids[idx])->SetWindowText(str);
-}
-
-// Random Move를 10회 실행하는 스레드 함수
-void threadProcess(CWnd* pParent)
-{
-	CMFCcImageDlg* pWnd = reinterpret_cast<CMFCcImageDlg*>(pParent);
-	if (!pWnd) return;
-	// 랜덤 이동 버튼 비활성화
-	pWnd->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(FALSE);
-
-	int i = 0;
-	while (i < 10) {
-		if (pWnd->m_dots.size() < 3) break;
-
-		// 점 3개 랜덤 이동
-		for (size_t k = 0; k < pWnd->m_dots.size(); ++k) {
-			pWnd->m_dots[k].SetRandom();
-			pWnd->UpdateDotLabel(k);
-		}
-		pWnd->UpdateImageWithDots();
-
-		// 정원 그리기
-		try {
-			pWnd->DrawCircle(pWnd->m_dots, pWnd->thickness);
-
-			// 화면 업데이트
-			pWnd->UpdateDisplay();
-
-			Sleep(500);	// 0.5s
-			i++;
-		}
-		catch (exception& e) {
-			// 만약 에러가 발생하면 그것은 카운트에 차지하지 않고, 총 10번을 채우도록 설정
-			cout << e.what() << endl;
-			continue;
-		}
-	}
-
-	// 랜덤 이동 버튼 활성화
-	pWnd->GetDlgItem(IDC_BTN_RANDOM)->EnableWindow(TRUE);
 }
 
 // 랜덤 이동 버튼 액션
