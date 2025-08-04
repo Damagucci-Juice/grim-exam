@@ -573,8 +573,8 @@ void CMFCcImageDlg::OnBnClickedBtnRandom()
 
 // 10~500 사이의 값으로 점의 포지션을 업데이트함
 void Dot::SetRandom() {
-	x = rand() % 640;
-	y = rand() % 480;
+	x = rand() % IMAGE_WIDTH;
+	y = rand() % IMAGE_HEIGHT;
 }
 
 // 점 3개 미만으로 들고 있는지 검토해서 에러 반환
