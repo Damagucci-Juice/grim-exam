@@ -3,30 +3,13 @@
 #include <vector>
 #include <iostream>
 #include <random>
-#define IMAGE_WIDTH 640
-#define IMAGE_HEIGHT 480
-
+#include "Dot.h"
 using namespace std;
 
 #include "Process.h"
 #include <chrono>
 #include <thread>
 using namespace chrono;
-
-//--------------------------------
-// Dot 클래스: 구조체/유틸
-class Dot
-{
-public:
-    int x;
-    int y;
-    bool selected;  // 점이 드래그 중인지 여부
-
-    Dot(int _x, int _y) : x(_x), y(_y), selected(false) {}
-    void SetRandom();
-
-    friend ostream& operator<<(ostream& os, const Dot& d);
-};
 
 //--------------------------------
 // CMFCcImageDlg 대화 상자

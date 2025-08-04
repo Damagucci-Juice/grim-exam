@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Dot.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFCcImage.h" />
     <ClInclude Include="MFCcImageDlg.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Dot.cpp" />
     <ClCompile Include="MFCcImage.cpp" />
     <ClCompile Include="MFCcImageDlg.cpp" />
     <ClCompile Include="pch.cpp">

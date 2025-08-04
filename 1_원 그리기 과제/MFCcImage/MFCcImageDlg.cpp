@@ -488,22 +488,7 @@ void CMFCcImageDlg::OnEnChangeThickVal()
 		return;
 	}
 
-
-
-	/*if (0 <= thickness && thickness <= 10) {
-		
-		
-		
-	} else {
-		thickness = 1;
-	}*/
-
 	UpdateData(FALSE);
-}
-
-ostream& operator<<(ostream& os, const Dot& d) {
-	os << "X: " << d.x << ", Y: " << d.y;
-	return os;
 }
 
 // 점의 정보를 업데이트
@@ -514,7 +499,7 @@ void CMFCcImageDlg::UpdateDotLabel(int idx) {
 	GetDlgItem(ids[idx])->SetWindowText(str);
 }
 
-
+// Random Move를 10회 실행하는 스레드 함수
 void threadProcess(CWnd* pParent)
 {
 	CMFCcImageDlg* pWnd = reinterpret_cast<CMFCcImageDlg*>(pParent);
@@ -569,12 +554,6 @@ void CMFCcImageDlg::OnBnClickedBtnRandom()
 	}
 	
 	
-}
-
-// 10~500 사이의 값으로 점의 포지션을 업데이트함
-void Dot::SetRandom() {
-	x = rand() % IMAGE_WIDTH;
-	y = rand() % IMAGE_HEIGHT;
 }
 
 // 점 3개 미만으로 들고 있는지 검토해서 에러 반환
