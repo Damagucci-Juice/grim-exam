@@ -112,7 +112,7 @@ void threadProcess(CWnd* pParent)
 
 CMFCcImageDlg::CMFCcImageDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCCIMAGE_DIALOG, pParent)
-	, thickness(1), raw_thickness("")
+	, thickness(1), raw_thickness("1")
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
